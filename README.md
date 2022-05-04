@@ -1,6 +1,6 @@
 # Pandas_personalNotes
 
-I recommend this short course introduction [Kaggle: learn Pandas](https://www.kaggle.com/learn/pandas)
+I recommend this short course introduction [Kaggle: learn Pandas](https://www.kaggle.com/learn/pandas), most of the code snippets are taken as personal reminder from there.
 
 There is a similarity with numpy arrays. The main objects of this module Pandas are:
 * panda.Series
@@ -26,3 +26,42 @@ You could access to `DataFrame` with; "dot notation", `reviews.country` ; or "di
 When you call a column `reviews['country'][0]`, it works as a panda.Series, which can be called as a list.
 
 ### pd.iloc vs pd.loc
+
+# Conditional selection
+``` python
+reviews.country == 'Italy'
+reviews.loc[reviews.country == 'Italy']
+reviews.loc[(reviews.country == 'Italy') & (reviews.points >= 90)]
+reviews.loc[reviews.country.isin(['Italy', 'France'])]
+reviews.loc[reviews.price.notnull()]
+```
+
+# Summary
+``` python
+reviews.points.describe()
+
+reviews.points.mean()
+reviews.points.map(lambda p: p - review_points_mean)
+
+reviews.taster_name.value_counts()
+
+def remean_points(row):
+    row.points = row.points - review_points_mean
+    return row
+
+reviews.apply(remean_points, axis='columns')
+
+reviews.head(5)
+reviews.tail(5)
+
+reviews.country + " - " + reviews.region_1
+```
+
+# groups
+``` python
+reviews.groupby('points').points.count()
+reviews.groupby('points').price.min()
+reviews.groupby('winery').apply(lambda df: df.title.iloc[0])
+reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.idxmax()])
+reviews.groupby(['country']).price.agg([len, min, max])
+```
